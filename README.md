@@ -1,3 +1,7 @@
+# Advent of Code 2021
+
+<!--- advent_readme_stars table --->
+
 # aoc-kotlin-starter
 
 Starter template for solving [Advent of Code](https://adventofcode.com) in [Kotlin](https://kotlinlang.org/)

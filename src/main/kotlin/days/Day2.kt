@@ -6,41 +6,36 @@ class Day2 : Day(2) {
         Pair(command, amount.toInt())
     }
 
-    fun linearCommandRunner(initialPosition: Triple<Int, Int, Int>, command: Pair<String, Int>): Triple<Int, Int, Int> {
-        val (x, y, aim) = initialPosition
-        val (direction, amount) = command
+    open class Position(val x: Int,val y: Int) {
+        open operator fun plus(i: Int) = Position(x, y + i)
+        open operator fun minus(i: Int) = Position(x, y - i)
+        open operator fun times(i: Int) = Position(x + i, y)
 
-        return when (direction) {
-            "up" -> Triple(x, y - amount, aim)
-            "down" -> Triple(x, y + amount, aim)
-            "forward" -> Triple(x + amount, y, aim)
-            else -> initialPosition
-        }
+        fun getLocation() = x * y
     }
 
-    fun aimedCommandRunner(initialPosition: Triple<Int, Int, Int>, command: Pair<String, Int>): Triple<Int, Int, Int> {
-        val (x, y, aim) = initialPosition
-        val (direction, amount) = command
-
-        return when (direction) {
-            "up" -> Triple(x, y - amount, aim)
-            "down" -> Triple(x, y + amount, aim)
-            "forward" -> Triple(x + amount, y, aim)
-            else -> initialPosition
-        }
+    class AimedPosition(x: Int,y: Int, val aim: Int = 0): Position(x, y) {
+        override operator fun plus(i: Int) = AimedPosition(x, y, aim + i)
+        override operator fun minus(i: Int) = AimedPosition(x, y, aim - i)
+        override operator fun times(i: Int) = AimedPosition(x + i, y + aim * i, aim)
     }
 
-    fun getFinalPosition(calcPositionFunc: (Triple<Int, Int, Int>, command: Pair<String, Int>) -> Triple<Int, Int, Int>): Pair<Int, Int> {
-        return commands.fold(Triple(0, 0, 0)) { position, command ->
-            calcPositionFunc(position, command)
-        }.let { (x, y) -> x to y }
+    fun commandRunner(initialPosition: Position, command: Pair<String, Int>): Position {
+        val (direction, amount) = command
+        
+        return when (direction) {
+            "up" -> initialPosition - amount
+            "down" -> initialPosition + amount
+            "forward" -> initialPosition * amount
+            else -> initialPosition
+        }
     }
 
     override fun partOne(): Any {
-        return getFinalPosition(::linearCommandRunner).let { (x, y) -> x * y }
+        return commands.fold(Position(0, 0), ::commandRunner).getLocation()
     }
 
     override fun partTwo(): Any {
-        return getFinalPosition(::aimedCommandRunner).let { (x, y) -> x * y }
+        return commands.fold(AimedPosition(0, 0), ::commandRunner).getLocation()
     }
 }

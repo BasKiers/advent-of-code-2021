@@ -1,4 +1,6 @@
-package days
+package days_2021
+
+import util.Day
 
 class Day1 : Day(1) {
     val input = inputList.map { it.toInt() }

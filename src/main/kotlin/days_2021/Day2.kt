@@ -1,4 +1,6 @@
-package days
+package days_2021
+
+import util.Day
 
 class Day2 : Day(2) {
     val commands: List<Pair<String, Int>> = inputList.map { line ->

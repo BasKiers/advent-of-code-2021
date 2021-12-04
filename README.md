@@ -28,7 +28,7 @@ Project is already setup with gradle. To run the app:
 
 * Navigate to top-level directory on the command line
 * Run `./gradlew run` to run all days
-* Run `./gradlew run --args $DAY` where `$DAY` is an integer to run a specific day
+* Run `./gradlew run --args "$YEAR $DAY"` where `$YEAR` is an integer to run all days of a year and`$DAY` is an integer to run a specific day
 
 ### Testing
 

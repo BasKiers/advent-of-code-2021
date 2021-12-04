@@ -1,20 +1,11 @@
 package days_2021
 
 import util.Day
+import util.Util
 
 class Day3 : Day(3) {
     val input = inputList.map { it.toCharArray().toList() };
-    val transposedInput = transpose(input)
-
-    fun <T> transpose(list: List<List<T>>): List<List<T>> {
-        val result: MutableList<MutableList<T>> = MutableList(list[0].size) { MutableList(list.size) { list[0][0] } }
-        for ((i, col) in list.withIndex()) {
-            for ((j, item) in col.withIndex()) {
-                result[j][i] = item
-            }
-        }
-        return result
-    }
+    val transposedInput = Util.transpose(input)
 
     fun invertBitChar(char: Char) = when (char) {
         '1' -> '0'
@@ -47,7 +38,7 @@ class Day3 : Day(3) {
             return list
         }
 
-        val filterOnChar = getFilterChar(transpose(list)[index])
+        val filterOnChar = getFilterChar(Util.transpose(list)[index])
         return getSecondLevelData(
             getFilterChar,
             list.filter { chars -> chars[index] == filterOnChar },

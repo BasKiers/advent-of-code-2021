@@ -5,8 +5,8 @@ import util.Util
 
 class Day4 : Day(4) {
     data class BingoCard(val card: List<List<Int>>) {
-        var rows: List<List<Int>> = card;
-        var cols: List<List<Int>> = Util.transpose(card);
+        var rows: List<List<Int>> = card
+        var cols: List<List<Int>> = Util.transpose(card)
         var winningState: Int? = null
 
         fun call(num: Int) {
@@ -25,9 +25,9 @@ class Day4 : Day(4) {
             fun from(state: String): BingoCard {
                 val numbers = state.split("\n").map {
                     it.split(" ").filter { numStr -> numStr != "" }.map(String::toInt)
-                };
+                }
 
-                return BingoCard(numbers);
+                return BingoCard(numbers)
             }
         }
     }
@@ -37,11 +37,11 @@ class Day4 : Day(4) {
 
         companion object {
             fun from(state: String): Bingo {
-                val parts = state.split("\n\n");
+                val parts = state.split("\n\n")
                 val rounds = parts[0].split(",").map(String::toInt)
                 val cards = parts.drop(1).map(BingoCard::from)
 
-                return Bingo(rounds, cards);
+                return Bingo(rounds, cards)
             }
         }
 
@@ -52,7 +52,7 @@ class Day4 : Day(4) {
         override fun hasNext() = availableRounds.isNotEmpty()
 
         override fun next(): Bingo {
-            val round = availableRounds.removeAt(0);
+            val round = availableRounds.removeAt(0)
             cards.forEach { card -> card.call(round) }
 
             return this
@@ -60,7 +60,7 @@ class Day4 : Day(4) {
     }
 
     override fun partOne(): Any {
-        val bingo = Bingo.from(inputString);
+        val bingo = Bingo.from(inputString)
         while (bingo.hasNext() && bingo.getWinners().isEmpty()) {
             bingo.next()
         }
@@ -68,11 +68,11 @@ class Day4 : Day(4) {
     }
 
     override fun partTwo(): Any {
-        val bingo = Bingo.from(inputString);
+        val bingo = Bingo.from(inputString)
         while (bingo.hasNext() && bingo.getRemaining().size > 1) {
             bingo.next()
         }
-        val lastRemainingCard = bingo.getRemaining().first();
+        val lastRemainingCard = bingo.getRemaining().first()
         while (bingo.hasNext()) {
             bingo.next()
         }

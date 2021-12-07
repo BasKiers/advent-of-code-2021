@@ -7,28 +7,34 @@ import kotlin.math.min
 
 class Day7 : Day(7) {
     val input = inputString.split(",").map(String::toInt)
+    val minInputVal = input.reduce { a, b -> min(a, b) }
+    val maxInputVal = input.reduce { a, b -> max(a, b) }
 
     fun getExponentialFuelCost(num: Int) = if (num < 1) num else (1..num).reduce(Int::plus)
 
     fun getCostToTarget(positions: List<Int>, target: Int, costFunc: (num: Int) -> Int) =
         positions.fold(0) { fuelCost, position -> fuelCost + costFunc(abs(target - position)) }
 
-    fun getAllCosts(positions: List<Int>, costFunc: (num: Int) -> Int = { it }): List<Int> {
-        val min = positions.reduce { a, b -> min(a, b) }
-        val max = positions.reduce { a, b -> max(a, b) }
-        return (min..max).map { getCostToTarget(positions, it, costFunc) }
+    fun getMinCost(min: Int, max: Int, positions: List<Int>, costFunc: (num: Int) -> Int = { it }): Int {
+        val step = (max - min) / 3
+        val left = min + step
+        val right = max - step
+        val leftRes = getCostToTarget(positions, left, costFunc)
+        val rightRes = getCostToTarget(positions, right, costFunc);
+
+        return if (leftRes < rightRes) {
+            if (left == min) leftRes else getMinCost(min, right, positions, costFunc)
+        } else {
+            if (left == max) rightRes else getMinCost(left, max, positions, costFunc)
+        }
     }
 
     override fun partOne(): Any {
-        return getAllCosts(input).reduce { minFuelCost, newFuelCost ->
-            min(minFuelCost, newFuelCost)
-        }
+        return getMinCost(minInputVal, maxInputVal, input)
     }
 
     override fun partTwo(): Any {
-        return getAllCosts(input, ::getExponentialFuelCost).reduce { minFuelCost, newFuelCost ->
-            min(minFuelCost, newFuelCost)
-        }
+        return getMinCost(minInputVal, maxInputVal, input, ::getExponentialFuelCost)
     }
 
 }
